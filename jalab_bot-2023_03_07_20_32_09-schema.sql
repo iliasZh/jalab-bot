@@ -1,8 +1,3 @@
-CREATE SEQUENCE usernameless_jalabs_seq
-    AS INTEGER;
-
-ALTER SEQUENCE usernameless_jalabs_seq OWNER TO admin;
-
 CREATE TABLE users
 (
     id               BIGINT                NOT NULL
