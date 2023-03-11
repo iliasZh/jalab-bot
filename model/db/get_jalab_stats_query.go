@@ -19,6 +19,7 @@ func NewGetJalabOfTheMonthQuery(groupChatID int64) GetJalabStatsQuery {
 		ToDate:      firstDayOfMonth(now, nextMonth).Add(-24 * time.Hour),
 	}
 }
+
 func firstDayOfMonth(d time.Time, advance func(time.Time) (int, time.Month)) time.Time {
 	y, m := advance(d)
 	return time.Date(y, m, 1, 0, 0, 0, 0, time.UTC)
