@@ -1,0 +1,7 @@
+.idea
+
+*.exe
+
+*.ps1
+
+*-dump.sql
