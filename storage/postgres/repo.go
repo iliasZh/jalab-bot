@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	ErrJalabNotFound = fmt.Errorf("jalab not found")
+	ErrJalabNotFound       = fmt.Errorf("jalab not found")
+	ErrTodaysJalabNotFound = fmt.Errorf("today's jalab not found")
 )
 
 const (
@@ -131,6 +132,9 @@ func (r Repo) GetTodaysJalab(
 	}()
 
 	errGet := r.stmtGetTodaysJalab.GetContext(ctx, &u, tj)
+	if errors.Is(errGet, sql.ErrNoRows) {
+		return db.User{}, ErrTodaysJalabNotFound
+	}
 	if errGet != nil {
 		return db.User{}, fmt.Errorf("executing query: %w", errGet)
 	}

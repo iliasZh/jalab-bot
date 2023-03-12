@@ -14,9 +14,9 @@ import (
 )
 
 func (s Service) Yaxshi(c tgapi.HandlerContext, u model.Update, args ...string) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(c.Ctx(), 5*time.Second)
 	defer cancel()
-	c.SetContext(ctx)
+	c.SetCtx(ctx)
 
 	if len(args) != 0 {
 		return s.giveYaxshi(c, u, args[0])
@@ -37,10 +37,9 @@ func (s Service) giveYaxshi(c tgapi.HandlerContext, u model.Update, username str
 	}
 
 	if username == c.Bot().Username {
-		text := "Рахмет, брат"
 		return c.SendMessage(model.SendMessageRq{
 			ChatID:                   u.Message.Chat.Id,
-			Text:                     text,
+			Text:                     "Рахмет, брат",
 			ReplyToMessageID:         u.Message.Id,
 			AllowSendingWithoutReply: true,
 		})
@@ -56,7 +55,7 @@ func (s Service) giveYaxshi(c tgapi.HandlerContext, u model.Update, username str
 		})
 	}
 
-	jalab, errGetReceiver := s.stg.Repo.GetJalabByUsername(c.Context(), db.GetByUsernameQuery{
+	jalab, errGetReceiver := s.stg.Repo.GetJalabByUsername(c.Ctx(), db.GetByUsernameQuery{
 		Username:    username,
 		GroupChatID: u.Message.Chat.Id,
 	})
@@ -72,7 +71,7 @@ func (s Service) giveYaxshi(c tgapi.HandlerContext, u model.Update, username str
 		return errGetReceiver
 	}
 
-	yaxshi, errCreateYaxshi := s.stg.Yaxshis.Create(c.Context(), db.Yaxshi{
+	yaxshi, errCreateYaxshi := s.stg.Yaxshis.Create(c.Ctx(), db.Yaxshi{
 		GroupChatID: u.Message.Chat.Id,
 		UserID:      jalab.ID,
 	})
@@ -92,7 +91,7 @@ func (s Service) giveYaxshi(c tgapi.HandlerContext, u model.Update, username str
 }
 
 func (s Service) getYaxshiStats(c tgapi.HandlerContext, u model.Update) error {
-	jalabs, stats, errGetStats := s.stg.Repo.GetYaxshiStats(c.Context(), db.Yaxshi{
+	jalabs, stats, errGetStats := s.stg.Repo.GetYaxshiStats(c.Ctx(), db.Yaxshi{
 		GroupChatID: u.Message.Chat.Id,
 	})
 	if errGetStats != nil {

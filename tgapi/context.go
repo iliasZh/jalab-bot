@@ -11,11 +11,11 @@ type HandlerContext struct {
 	t   *TgAPI
 }
 
-func (c *HandlerContext) SetContext(ctx context.Context) {
+func (c *HandlerContext) SetCtx(ctx context.Context) {
 	c.ctx = ctx
 }
 
-func (c *HandlerContext) Context() context.Context {
+func (c *HandlerContext) Ctx() context.Context {
 	return c.ctx
 }
 

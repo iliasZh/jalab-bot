@@ -15,11 +15,11 @@ import (
 )
 
 func (s Service) BecomeJalab(c tgapi.HandlerContext, u model.Update, _ ...string) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(c.Ctx(), 5*time.Second)
 	defer cancel()
-	c.SetContext(ctx)
+	c.SetCtx(ctx)
 
-	storedUser, errGetUser := s.stg.Users.Get(ctx, db.User{ID: u.Message.From.Id})
+	storedUser, errGetUser := s.stg.Users.Get(c.Ctx(), db.User{ID: u.Message.From.Id})
 	if errGetUser != nil && !errors.Is(errGetUser, sql.ErrNoRows) {
 		return errGetUser
 	}
@@ -33,7 +33,7 @@ func (s Service) BecomeJalab(c tgapi.HandlerContext, u model.Update, _ ...string
 		FirstName: u.Message.From.FirstName,
 	}
 
-	currentUser, errCreateUser := s.stg.Users.Create(ctx, currentUser)
+	currentUser, errCreateUser := s.stg.Users.Create(c.Ctx(), currentUser)
 	if errCreateUser != nil {
 		return errCreateUser
 	}
@@ -65,7 +65,7 @@ func (s Service) BecomeJalab(c tgapi.HandlerContext, u model.Update, _ ...string
 		GroupChatID: u.Message.Chat.Id,
 		UserID:      currentUser.ID,
 	}
-	_, errCreate := s.stg.Jalabs.Create(c.Context(), jalab)
+	_, errCreate := s.stg.Jalabs.Create(c.Ctx(), jalab)
 	if errCreate != nil && !errors.Is(errCreate, jalabs.ErrAlreadyExists) {
 		return errCreate
 	}

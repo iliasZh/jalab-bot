@@ -12,10 +12,12 @@ import (
 )
 
 func (s Service) ToggleMentions(c tgapi.HandlerContext, u model.Update, _ ...string) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(c.Ctx(), 5*time.Second)
 	defer cancel()
 
-	user, errToggle := s.stg.Users.ToggleMentions(ctx, db.User{
+	c.SetCtx(ctx)
+
+	user, errToggle := s.stg.Users.ToggleMentions(c.Ctx(), db.User{
 		ID: u.Message.From.Id,
 	})
 	if errors.Is(errToggle, users.ErrNotFound) {

@@ -29,12 +29,18 @@ const (
 	SELECT id, group_chat_id, user_id, created_at, updated_at
 	FROM jalabs
 	WHERE group_chat_id = :group_chat_id AND user_id = :user_id;`
+
+	queryGetAll = `
+	SELECT id, group_chat_id, user_id, created_at, updated_at
+	FROM jalabs
+	WHERE group_chat_id = :group_chat_id;`
 )
 
 type Repo struct {
 	db         *sqlx.DB
 	stmtCreate *sqlx.NamedStmt
 	stmtGet    *sqlx.NamedStmt
+	stmtGetAll *sqlx.NamedStmt
 }
 
 func New(ctx context.Context, db *sqlx.DB) (r Repo, err error) {
@@ -56,10 +62,16 @@ func New(ctx context.Context, db *sqlx.DB) (r Repo, err error) {
 		return Repo{}, fmt.Errorf("preparing get stmt: %w", errPrepareGet)
 	}
 
+	stmtGetAll, errPrepareGetAll := db.PrepareNamedContext(ctx, queryGetAll)
+	if errPrepareGetAll != nil {
+		return Repo{}, fmt.Errorf("preparing get all stmt: %w", errPrepareGetAll)
+	}
+
 	return Repo{
 		db:         db,
 		stmtCreate: stmtCreate,
 		stmtGet:    stmtGet,
+		stmtGetAll: stmtGetAll,
 	}, nil
 }
 
@@ -98,6 +110,26 @@ func (r Repo) Get(ctx context.Context, j db.Jalab) (gotten db.Jalab, err error) 
 	}
 	if errGet != nil {
 		return db.Jalab{}, fmt.Errorf("executing query: %w", errGet)
+	}
+
+	return gotten, nil
+}
+
+func (r Repo) GetAll(ctx context.Context, j db.Jalab) (gotten []db.Jalab, err error) {
+	defer func() {
+		if err == nil {
+			return
+		}
+
+		err = fmt.Errorf("getting all jalabs of group with %d: %w", j.GroupChatID, err)
+	}()
+
+	errGetAll := r.stmtGetAll.SelectContext(ctx, &gotten, j)
+	if errors.Is(errGetAll, sql.ErrNoRows) {
+		return []db.Jalab{}, nil
+	}
+	if errGetAll != nil {
+		return nil, fmt.Errorf("executing query: %w", errGetAll)
 	}
 
 	return gotten, nil

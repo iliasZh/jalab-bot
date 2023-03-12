@@ -12,13 +12,13 @@ import (
 )
 
 func (s Service) JalabsOfTheMonth(c tgapi.HandlerContext, u model.Update, _ ...string) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(c.Ctx(), 5*time.Second)
 	defer cancel()
 
-	c.SetContext(ctx)
+	c.SetCtx(ctx)
 
 	q := db.NewGetJalabOfTheMonthQuery(u.Message.Chat.Id)
-	jalabs, stats, errGet := s.stg.Repo.GetJalabStats(c.Context(), q)
+	jalabs, stats, errGet := s.stg.Repo.GetJalabStats(c.Ctx(), q)
 	if errGet != nil {
 		return errGet
 	}

@@ -13,13 +13,13 @@ import (
 )
 
 func (s Service) Jalabs(c tgapi.HandlerContext, u model.Update, _ ...string) error {
-	ctx, cancel := context.WithTimeout(c.Context(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(c.Ctx(), 5*time.Second)
 	defer cancel()
 
-	c.SetContext(ctx)
+	c.SetCtx(ctx)
 
 	users, errGet := s.stg.Repo.GetGroupJalabs(
-		c.Context(), db.Jalab{GroupChatID: u.Message.Chat.Id},
+		c.Ctx(), db.Jalab{GroupChatID: u.Message.Chat.Id},
 	)
 	if errGet != nil {
 		return errGet
