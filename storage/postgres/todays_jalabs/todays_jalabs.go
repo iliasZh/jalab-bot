@@ -7,9 +7,8 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
 	"jalabs.kz/bot/model/db"
-	"jalabs.kz/bot/storage/postgres"
+	"jalabs.kz/bot/storage/postgres/error_code"
 )
 
 var (
@@ -71,8 +70,7 @@ func (r Repo) Create(ctx context.Context, tj db.TodaysJalab) (created db.TodaysJ
 	}()
 
 	errCreate := r.stmtCreate.GetContext(ctx, &created, tj)
-	var errPQ *pq.Error
-	if errors.As(errCreate, &errPQ) && errPQ.Code == postgres.SQLStateUniqueConstraintViolation {
+	if error_code.GetFrom(errCreate) == error_code.UniqueConstraintViolation {
 		return db.TodaysJalab{}, ErrAlreadyExists
 	}
 	if errCreate != nil {
