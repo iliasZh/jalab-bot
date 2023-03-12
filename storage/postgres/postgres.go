@@ -9,9 +9,6 @@ import (
 
 const (
 	dsn = "host=localhost port=5432 sslmode=disable user=admin password=admin dbname=jalab_bot"
-
-	SQLStateForeignKeyViolation       = "23503"
-	SQLStateUniqueConstraintViolation = "23505"
 )
 
 func New() (*sqlx.DB, error) {

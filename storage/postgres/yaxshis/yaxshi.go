@@ -2,13 +2,11 @@ package yaxshis
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
 	"jalabs.kz/bot/model/db"
-	"jalabs.kz/bot/storage/postgres"
+	"jalabs.kz/bot/storage/postgres/error_code"
 )
 
 var ErrNoSuchJalab = fmt.Errorf("no such jalab")
@@ -58,8 +56,7 @@ func (r Repo) Create(ctx context.Context, y db.Yaxshi) (created db.Yaxshi, err e
 	}()
 
 	errCreate := r.stmtCreate.GetContext(ctx, &created, y)
-	var errPQ *pq.Error
-	if errors.As(errCreate, &errPQ) && errPQ.Code == postgres.SQLStateForeignKeyViolation {
+	if error_code.GetFrom(errCreate) == error_code.ForeignKeyViolation {
 		return db.Yaxshi{}, ErrNoSuchJalab
 	}
 	if errCreate != nil {
