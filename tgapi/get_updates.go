@@ -1,14 +1,15 @@
 package tgapi
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
 	"log"
 	"net/url"
 	"path"
+	"slices"
 
-	"golang.org/x/exp/slices"
 	"jalabs.kz/bot/model"
 )
 
@@ -50,8 +51,8 @@ func (t *TgAPI) getUpdates(ctx context.Context, updatesChan chan<- model.Update)
 				continue
 			}
 
-			slices.SortFunc(updates, func(u1, u2 model.Update) bool {
-				return u1.Message.Date < u2.Message.Date
+			slices.SortFunc(updates, func(u1, u2 model.Update) int {
+				return cmp.Compare(u1.Message.Date, u2.Message.Date)
 			})
 
 			if updatesCount := len(updates); updatesCount != 0 {

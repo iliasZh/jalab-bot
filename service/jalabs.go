@@ -1,12 +1,13 @@
 package service
 
 import (
+	"cmp"
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
-	"golang.org/x/exp/slices"
 	"jalabs.kz/bot/model"
 	"jalabs.kz/bot/model/db"
 	"jalabs.kz/bot/tgapi"
@@ -35,8 +36,8 @@ func (s Service) Jalabs(c tgapi.HandlerContext, u model.Update, _ ...string) err
 		})
 	}
 
-	slices.SortFunc(users, func(u1, u2 db.User) bool {
-		return u1.CreatedAt.Before(u2.CreatedAt)
+	slices.SortFunc(users, func(u1, u2 db.User) int {
+		return cmp.Compare(u1.CreatedAt.Unix(), u2.CreatedAt.Unix())
 	})
 
 	jalabList := make([]string, len(users))
