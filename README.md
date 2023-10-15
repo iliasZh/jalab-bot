@@ -1,10 +1,10 @@
 # What it does
-Nothing useful in particular.
+Nothing really useful.
 
 The most common command `/todaysjalab` picks a group member at random (for the day) and @mentions them.
 We used it just to spam random colleagues with @mentions.
 
-The other common, at least somewhat useful command, `/yaxshi` is for giving thanks to a colleague.
+The other common, somewhat useful command, `/yaxshi` is for giving thanks to a colleague.
 With its help we had our own social credit system :)
 
 "jalab" and "yaxshi" are Uzbek words.
