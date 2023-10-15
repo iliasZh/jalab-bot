@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
 	"jalabs.kz/bot/model/db"
 	"jalabs.kz/bot/storage/postgres/error_code"
 )
