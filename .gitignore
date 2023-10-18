@@ -2,6 +2,6 @@
 
 *.exe
 
-*.ps1
+run.ps1
 
 *-dump.sql
