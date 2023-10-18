@@ -116,7 +116,7 @@ func (s Service) getYaxshiStats(c tgapi.HandlerContext, u model.Update) error {
 		)
 	}
 
-	text := fmt.Sprintf("Статистика яхши:\n") + strings.Join(entries, "\n")
+	text := fmt.Sprintf("Статистика яхши: \n%s", strings.Join(entries, "\n"))
 	return c.SendMessage(model.SendMessageRq{
 		ChatID:                   u.Message.Chat.Id,
 		Text:                     text,

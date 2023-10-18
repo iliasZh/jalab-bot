@@ -41,7 +41,7 @@ func (s Service) JalabsOfTheMonth(c tgapi.HandlerContext, u model.Update, _ ...s
 		)
 	}
 
-	text := fmt.Sprintf("Джаляпы месяца:\n") + strings.Join(entries, "\n")
+	text := fmt.Sprintf("Джаляпы месяца:\n%s", strings.Join(entries, "\n"))
 	return c.SendMessage(model.SendMessageRq{
 		ChatID:                   u.Message.Chat.Id,
 		Text:                     text,
