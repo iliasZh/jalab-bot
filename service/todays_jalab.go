@@ -2,9 +2,10 @@ package service
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"time"
 
 	"jalabs.kz/bot/model"
@@ -49,8 +50,12 @@ func (s Service) TodaysJalab(c tgapi.HandlerContext, u model.Update, _ ...string
 		})
 	}
 
-	idx := rand.Intn(jalabsCount)
-	jalab := groupJalabs[idx]
+	idx, errRandInt := rand.Int(rand.Reader, big.NewInt(int64(jalabsCount)))
+	if errRandInt != nil {
+		return fmt.Errorf("generating random index: %w", errRandInt)
+	}
+
+	jalab := groupJalabs[idx.Int64()]
 	todaysJalab, errCreateOrGet := s.stg.TodaysJalabs.CreateOrGet(c.Ctx(), db.TodaysJalab{
 		UserID:      jalab.UserID,
 		GroupChatID: jalab.GroupChatID,
