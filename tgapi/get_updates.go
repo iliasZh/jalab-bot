@@ -4,30 +4,11 @@ import (
 	"cmp"
 	"context"
 	"errors"
-	"fmt"
 	"log"
-	"net/url"
-	"path"
 	"slices"
 
 	"jalabs.kz/bot/model"
 )
-
-func (t *TgAPI) getUpdatesURL() *url.URL {
-	botToken := fmt.Sprintf("bot%s", t.botToken)
-	getUpdatesURL := &url.URL{
-		Scheme: "https",
-		Host:   "api.telegram.org",
-		Path:   path.Join(botToken, "getUpdates"),
-	}
-
-	queryParams := url.Values{}
-	queryParams.Set("offset", fmt.Sprintf("%v", t.maxUpdateID+1))
-	queryParams.Set("timeout", fmt.Sprintf("%d", pollingPeriodSeconds))
-
-	getUpdatesURL.RawQuery = queryParams.Encode()
-	return getUpdatesURL
-}
 
 func (t *TgAPI) getUpdates(ctx context.Context, updatesChan chan<- model.Update) {
 	for {
