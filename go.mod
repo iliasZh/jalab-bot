@@ -1,6 +1,6 @@
 module jalabs.kz/bot
 
-go 1.21
+go 1.21.5
 
 require (
 	github.com/jmoiron/sqlx v1.3.5
