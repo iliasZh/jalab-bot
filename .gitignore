@@ -5,3 +5,6 @@
 run.ps1
 
 *-dump.sql
+
+# linux executable
+jalab-bot
